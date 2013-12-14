@@ -4,7 +4,7 @@
   <head>
     <meta charset="utf-8">
 
-    <title>reveal.js - The HTML Presentation Framework</title>
+    <title>Implementando Prolog</title>
 
     <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
     <meta name="author" content="Hakim El Hattab">
@@ -47,53 +47,100 @@
 	</section>
 
 	<section>
-	  <h2>Implementando Prolog</h2>
+	  <h2>Comprobemos que Prolog no es magia, implementándolo</h2>
 	  <p class="fragment"><strong>... en JavaScript</strong></p>
 	  <p class="fragment roll-in"><img src="assets/harryhermioneron.jpg"</p>
 
 
 					   <aside class="notes">
-					     Oh hey, these are some notes. They'll be hidden in your presentation, but you can see them if you open the speaker notes window (hit 's' on your keyboard).
+					     Hace mes y pico... se me ocurrió esta idea
 					   </aside>
 	</section>
 
 	<section>
 	  <h2>¿Por qué?</h2>
 	  <ul>
-	    <li class="fragment">Prolog es extraño.</li>
-	    <li class="fragment">Cuando no entiendo algo, lo abro y miro dentro.</li>
+	    <li class="fragment">Prolog resulta muy extraño.</li>
+	    <li class="fragment">Yo cuando no entiendo algo, miro dentro.</li>
 	    <li class="fragment">Porque sí.</li>
 	  </ul>
-					   <aside class="notes">
-					     1. Lenguage raro y he visto muchos, resulta difícil saber que significa lo que estás poniendo
-					     2. Todos de niño hacemos esto, sobre todo en este edificio y alrededores.
-					     3. Es decir, otras razones.Orgullo friki, tiempo, aburrimiento del programador como "fontanero", no hay "magia".
-					   </aside>
+	  <aside class="notes">
+	    1. Lenguage raro y he visto muchos, resulta difícil programar sin un modelo mental, y en este caso hay un gran salto
+	    2. Todos de niño hacemos esto, sobre todo en este edificio y alrededores.
+	    3. Es decir, otras razones.Orgullo friki, tiempo, aburrimiento del programador como "fontanero", no hay "magia".
+	  </aside>
 
 	</section>
 
 	<section>
 	  <h3>¿Por qué en JavaScript?</h3>
 	  <img src="assets/jsgood.jpg">
-					   <aside class="notes">
-					     1. Lenguaje horrible. Foto. Historia. Primeras implementaciones. Corta y pega. Entorno del DOM. Usar cosas para lo que no son
-					     2. Está en todas partes, es el "ensamblador" de internet. buenas herramientas, buenas implementaciones.
-					     3. Las partes buenas son bastante buenas. Lispy.
-					     4. Ley de Atwood. X in 30 lines of javascript.
-					   </aside>
+	  <aside class="notes">
+	    1. Lenguaje horrible. Foto. Historia. Primeras implementaciones. Corta y pega. Entorno del DOM. Usar cosas para lo que no son
+	    2. Está en todas partes, es el "ensamblador" de internet. buenas herramientas, buenas implementaciones.
+	    3. Las partes buenas son bastante buenas. Lispy.
+	    4. Ley de Atwood. X in 30 lines of javascript.
+	  </aside>
 
 	</section>
 
 	<section>
-	  <h2>¿Cómo?</h2>
-	  <span class="fragment">Google "prolog under the hood"</span>
-	  <span class="fragment"> -> Stack Overflow</span>
-<span class="fragment"> -> <a href="http://stackoverflow.com/questions/5881432/how-does-prolog-technically-work-whats-under-the-hood"> How does Prolog technically work? What's under the hood?</a><span>
-	  <p class="fragment">3 sugerencias</p>
-	  <ul class="fragment">
-	    <li>Prolog se implementa sobre una máquina virtual.</li>
-	    <li>Mirar una implementación libre (swi-prolog).</li>
-	    <li>Libros que explican implementaciones de prolog.</li>
+	  <section>
+	    <h2>¿Cómo?</h2>
+	    <span class="fragment">Google "prolog under the hood"</span>
+	    <span class="fragment">Stack Overflow</span>
+	    <span class="fragment"><a href="http://stackoverflow.com/questions/5881432/how-does-prolog-technically-work-whats-under-the-hood"> How does Prolog technically work? What's under the hood?</a></span>
+	    <p class="fragment">3 sugerencias</p>
+	    <ul>
+	      <li class="fragment">Mirar una implementación libre (swi-prolog).</li>
+	      <li class="fragment">Libros que explican implementaciones de prolog.</li>
+	      <li class="fragment" style="color: lightgreen;">Prolog se implementa sobre una máquina virtual.</li>
+	    </ul>
+	  </section>
+	  <section>
+	    <h1>WAM</h1>
+	    <h3>Warren Abstract Machine</h3>
+	    <p class="fragment">David H. D. Warren. An abstract Prolog instruction set. Technical
+	      Note 309, SRI International, Menlo Park, CA, October 1983.</p>
+	    <p class="fragment">Aït-Kaci, H. (1999). Warren’s Abstract Machine A TUTORIAL RECONSTRUCTION.</p>
+	    <aside class="notes">
+	      1970-- Intérpretes en Fortran<br>
+	      1983<br>
+	      tutorial? pág 19 de 120.
+	    </aside>
+	    
+	  </section>
+	  
+	</section>
+	  <section>
+	    <p>3 sugerencias:</p>
+	    <ul>
+	      <li style="color: red;text-decoration:line-through" >Mirar una implementación libre (swi-prolog).</li>
+	      <li style="color: lightgreen;">Libros que explican implementaciones de prolog.</li>
+	      <li style="color: red;text-decoration:line-through;">Prolog se implementa sobre una máquina virtual.</li>
+	    </ul>
+	    <h2 class="fragment">SICP!</h2>
+	  </section>
+
+	<section>
+	  <img src="assets/sicp.jpg">
+	</section>
+	<section>
+	  <img src="assets/sussman.jpg">
+	</section>
+	<section>
+	  <h3>Sección 4.4.4 de SICP</h3>
+	  <h1>Unificación</h1>
+	  <h1>+</h1>
+	  <h1>Backtracking(*)</h1>
+	</section>
+	<section>
+	  <h3>Backtracking(*)?</h3>
+	  <ul>
+	      <li class="fragment">Cada unificación devuelve una lista <strong>perezosa</strong> de sustituciones que unifican.</li>
+	      <li class="fragment">Búsqueda exhaustiva que reúne todas las unificaciones en una lista final. Perezosa por supuesto.</li>
+	      <li class="fragment">El resultado final es equivalente al de hacer backtracking "normal".</li>
+	      <li class="fragment">El código es elegante y facilita la evaluación de términos compuestos.</li>
 	  </ul>
 	</section>
 
@@ -306,7 +353,7 @@
 	      var node = nodes[i];
 
 	      if( !node.className ) {
-              node.className += ' roll';
+	      node.className += ' roll';
 	      }
 	      }
 	      }
