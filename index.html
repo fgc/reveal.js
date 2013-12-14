@@ -47,8 +47,9 @@
 	</section>
 
 	<section>
-	  <h2>Comprobemos que Prolog no es magia, implementándolo</h2>
-	  <p class="fragment"><strong>... en JavaScript</strong></p>
+	  <h2>Comprobemos que Prolog no es magia.</h2>
+	  <h3 class="fragment roll-in">implementándolo</h3>
+	  <p class="fragment roll-in"><strong>... en JavaScript</strong></p>
 	  <p class="fragment roll-in"><img src="assets/harryhermioneron.jpg"</p>
 
 
@@ -85,34 +86,33 @@
 	</section>
 
 	<section>
-	  <section>
-	    <h2>¿Cómo?</h2>
-	    <span class="fragment">Google "prolog under the hood"</span>
-	    <span class="fragment">Stack Overflow</span>
-	    <span class="fragment"><a href="http://stackoverflow.com/questions/5881432/how-does-prolog-technically-work-whats-under-the-hood"> How does Prolog technically work? What's under the hood?</a></span>
-	    <p class="fragment">3 sugerencias</p>
-	    <ul>
-	      <li class="fragment">Mirar una implementación libre (swi-prolog).</li>
-	      <li class="fragment">Libros que explican implementaciones de prolog.</li>
-	      <li class="fragment" style="color: lightgreen;">Prolog se implementa sobre una máquina virtual.</li>
-	    </ul>
-	  </section>
-	  <section>
-	    <h1>WAM</h1>
-	    <h3>Warren Abstract Machine</h3>
-	    <p class="fragment">David H. D. Warren. An abstract Prolog instruction set. Technical
-	      Note 309, SRI International, Menlo Park, CA, October 1983.</p>
-	    <p class="fragment">Aït-Kaci, H. (1999). Warren’s Abstract Machine A TUTORIAL RECONSTRUCTION.</p>
-	    <aside class="notes">
-	      1970-- Intérpretes en Fortran<br>
-	      1983<br>
-	      tutorial? pág 19 de 120.
-	    </aside>
-	    
-	  </section>
+	  <h2>¿Cómo?</h2>
+	  <span class="fragment">Google "prolog under the hood"</span>
+	  <span class="fragment">Stack Overflow</span>
+	  <span class="fragment"><a href="http://stackoverflow.com/questions/5881432/how-does-prolog-technically-work-whats-under-the-hood"> How does Prolog technically work? What's under the hood?</a></span>
+	  <p class="fragment">3 sugerencias</p>
+	  <ul>
+	    <li class="fragment">Mirar una implementación libre (swi-prolog).</li>
+	    <li class="fragment">Libros que explican implementaciones de prolog.</li>
+	    <li class="fragment" style="color: lightgreen;">Prolog se implementa sobre una máquina virtual.</li>
+	  </ul>
+	</section>
+	<section>
+	  <h1>WAM</h1>
+	  <h3>Warren Abstract Machine</h3>
+	  <p class="fragment">David H. D. Warren. An abstract Prolog instruction set. Technical
+	    Note 309, SRI International, Menlo Park, CA, October 1983.</p>
+	  <p class="fragment">Aït-Kaci, H. (1999). Warren’s Abstract Machine A TUTORIAL RECONSTRUCTION.</p>
+	  <aside class="notes">
+	    1970-- Intérpretes en Fortran<br>
+	    1983<br>
+	    tutorial? pág 19 de 120.<br>
+	    al menos me da pistas sobre cómo reprentar los términos<br>
+	  </aside>
 	  
 	</section>
-	  <section>
+
+	<section>
 	    <p>3 sugerencias:</p>
 	    <ul>
 	      <li style="color: red;text-decoration:line-through" >Mirar una implementación libre (swi-prolog).</li>
@@ -137,20 +137,61 @@
 	<section>
 	  <h3>Backtracking(*)?</h3>
 	  <ul>
-	      <li class="fragment">Cada unificación devuelve una lista <strong>perezosa</strong> de sustituciones que unifican.</li>
-	      <li class="fragment">Búsqueda exhaustiva que reúne todas las unificaciones en una lista final. Perezosa por supuesto.</li>
+	      <li class="fragment">Cada unificación devuelve una lista <strong class="fragment highlight-blue">perezosa</strong> de sustituciones que unifican.</li>
+	      <li class="fragment">Búsqueda exhaustiva que concatena todas las sustituciones válidas en una lista final. Perezosa por supuesto.</li>
 	      <li class="fragment">El resultado final es equivalente al de hacer backtracking "normal".</li>
 	      <p>
 	      <p class="fragment"><small>* Una pega, JavaScript no tiene listas perezosas...</small></p>
-	      <p class="fragment" style="float:right"><small> ... Pero el propio SICP enseña a implementarlas en el capítulo 3.</small></p>
+	      <p class="fragment roll-in" style="float:right"><small> ... Pero el propio SICP explica como implementarlas en el capítulo 3.</small></p>
 	  </ul>
 	</section>
 	<section>
+	  <img src="assets/streams1.png">
+	</section>
+	<section>
+	  <img src="assets/streams2.png">
+	</section>
+	<section>
+	  <h3>Representación de términos</h3>
+	  <pre><code>llueve.</code></pre>
+	  <pre><code data-trim>{"term":"constant", "value":"llueve"}</code></pre>
+	  <pre><code>numero(X).</code></pre>
+	  <pre><code data-trim>
+{
+  "term":"structure", 
+  "arity":"1",
+  "functor":"numero"
+  "subterms":[{"term":"variable", "name":"X"}]
+}</code></pre>
+	</section>
+
+	<section>
+	  <h3>Representación de términos/2</h3>
+	  <pre><code>hijo(X,Y) :- padre(Y,X), varon(X).</code></pre>
+	  <pre><code data-trim>{
+"term":"rule","head":{
+	        "term":"structure","functor":"hijo","arity":2,
+	        "subterms":[{"term":"variable","name":"X"},
+                            {"term":"variable","name":"Y"}]
+              },
+	      "body":{"term":"conj","subterms":[
+	         {"term":"structure","functor":"padre","arity":2,
+                     "subterms":[{"term":"variable","name":"Y"},
+                                 {"term":"variable","name":"X"}]},
+                 {"term":"structure","functor":"varon","arity":1,
+                      "subterms":[{"term":"variable","name":"X"}]}]}
+}</code></pre>
+	</section>
+
+
+	<section>
+	  
 	TODO
-              más asides
+        más asides:
 	mencionar continuaciones(en aside)
-	stream combinators
-	representación de términos (metascheme/pojo) Example el dolor de las listas.
+	representación de términos aside: el dolor de las listas.
+
+        como se ejecutan las reglas, ya puedo funcionar si represento mis datos
 	parser/bifs/editor/console
 	features inspired by ISO VP is shite/prácticas/ejemplos/tutoriales.
 	que falta: cuts (backtrack dependencies:) operators assert. + is a toy (doc,optim,recursiveness)
@@ -456,13 +497,13 @@
       // Full list of configuration options available here:
       // https://github.com/hakimel/reveal.js#configuration
       Reveal.initialize({
-      controls: true,
+      controls: false,
       progress: true,
       history: true,
       center: true,
 
       theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
-      transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+      transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
 
       // Parallax scrolling
       // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
