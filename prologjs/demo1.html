@@ -1,0 +1,166 @@
+<html>
+  <head>
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="jquery.mousewheel-min.js"></script>
+    <script src="jquery.terminal-0.7.8.js"></script>    <script src="streams.js"></script>
+    <script src="codemirror.js"></script>
+    <script src="codemirror-prolog-mode.js"></script>
+    <link rel="stylesheet" href="codemirror.css">
+    <link rel="stylesheet" href="vibrant-ink.css">
+    <script src="prolog_parse.js"></script>
+    <script src="prolog.js"></script>
+    <link rel="stylesheet" media="screen" href="http://openfontlibrary.org/face/cosmic-sans-neue-mono" rel="stylesheet" type="text/css"/>
+    <link href="jquery.terminal.css" rel="stylesheet"/>
+    <script>
+      var editor;
+      function consult() {
+        editor.save();
+        var programText = $("#program")[0].value;
+        program = parser.parse(programText);
+        $("#btn-consult").hide();
+      }
+
+      jQuery(function($, undefined) {
+          editor = CodeMirror.fromTextArea($('#program')[0],
+            { mode: "prolog"
+             ,theme: "vibrant-ink"
+            });
+          editor.on("change",function() {$("#btn-consult").show();});
+          editor.on("focus",function() {terminal.disable();});
+
+          $('#term').terminal(function(queryText, terminal) {
+            if (!window.terminal) {
+              
+            }
+            if (queryText !== '') {
+                try {
+                    var query = parser.parse(queryText,{startRule: "query"});
+                    executeQuery(query,terminal);
+                } catch(e) {
+                  terminal.error(new String(e));
+                }
+            } else {
+              terminal.echo('');
+            }
+          }, {
+      onInit: function(terminal) {window.terminal = terminal;},
+      greetings: 'Javascript Prolog Interpreter. fgc@usal.es',
+      name: 'js_demo',
+      height: 300,
+      prompt: '?- '});
+      consult();
+      });
+    </script>
+    <style>
+#btn-consult{
+text-align:center;
+text-decoration: none;
+font-family: sans-serif;
+-webkit-font-smoothing: antialiased;
+font-size: 100%;
+color: #FFF;
+background: #055;
+padding: 5px 8px;
+display: inline-block;
+white-space: nowrap;
+-webkit-border-radius: 5px;
+-moz-border-radius: 5px;
+border-radius: 5px;
+margin: 10px 0;
+-webkit-transition: all 0.2s ease-in-out;
+-ms-transition: all 0.2s ease-in-out;
+-moz-transition: all 0.2s ease-in-out;
+-o-transition: all 0.2s ease-in-out;
+transition: all 0.2s ease-in-out;
+}
+#btn-consult:hover {
+background: #033;
+}
+    </style>
+  </head>
+  <body style="background: #333">
+    <div id="left">
+      <textarea id="program" cols="60" rows="20">  llueve.
+  come(juan,  manzanas).
+  come(juan,  peras).
+  come(pedro, naranjas).
+  come(pedro, peras).
+  
+  padre(sara, pedro).
+  padre(pedro, juan).
+  padre(juan, rodolfo).
+  
+  abuelo(X, Y):-
+  	padre(X, Z),
+  	padre(Z, Y).
+  
+  ancestro(X, Y) :-
+  	padre(X, Y).
+  	
+  ancestro(X, Y) :-
+  	padre(X, Z),
+  	ancestro(Z, Y).
+  	
+  factorial(0,1):- true.
+  
+  factorial(X,Y) :-
+  	>(X, 0),
+  	+(N, X, -1),
+   	factorial(N, Z),
+   	*(Y, Z, X).
+
+  miembro(E,[E|_]).
+        
+  miembro(E,[_|T]):-
+  	miembro(E,T).
+        	
+  escribe([]).
+        
+  escribe([H|T]):-
+        write(H,'\n'),
+       	escribe(T).
+     
+  pon(X, []):-
+  	=(X2,[X]),
+  	escribe(X2).
+  	
+  pon(X, Lista):-
+  	=(X2, [X|Lista]),
+  	escribe(X2).
+  
+  ponfinal(X, [], Z):-
+  	=(Z, [X]).	
+  
+  ponfinal(X, [C|Y], Z):-
+  	ponfinal(X, Y, M),
+  	=(Z, [C|M]).
+    	
+
+  /*llueve.		   	*/
+  /*come(juan, manzanas).  	*/
+  /*come(juan, naranjas).  	*/
+  /*come(juan, X).	   	*/
+  /*come(juan, _).         	*/
+  /*come(X, peras).	   	*/
+  /*come(X, fresas).	  	*/
+  /*abuelo(sara, juan).		*/
+  /*ancestro(sara, pedro).	*/
+  /*ancestro(sara, juan).	*/
+  /*ancestro(sara, rodolfo).	*/
+  /*ancestro(pedro, sara).	*/
+  /*factorial(5, X).		*/
+  /*miembro(juan, [pedro, sara, paco]).	*/
+  /*miembro(sara, [pedro, sara, paco]).	*/
+  /*escribe([pedro, sara, paco]).	*/
+  /*pon(juan, [pedro, sara, paco]).	*/
+  /*pon(juan, []).			*/
+  /*ponfinal(juan, [pedro, sara, paco], X), escribe(X).	*/</textarea>
+      <div id="consult" style="padding:5px;">
+	<input type="button" style="color: white; background:#aaa" id="btn-consult" value="Consult" onclick="consult();">
+      </div>
+    </div>
+    <div id="right">
+      <div id="term" class="terminal" style="height: 300px;"></div>
+    <div>
+  </body>
+</html>
