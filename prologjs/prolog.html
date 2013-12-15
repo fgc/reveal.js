@@ -1,0 +1,88 @@
+<html>
+  <head>
+    <script src="jquery-1.7.2.min.js"></script>
+    <script src="jquery.mousewheel-min.js"></script>
+    <script src="jquery.terminal-0.7.8.js"></script>    <script src="streams.js"></script>
+    <script src="codemirror.js"></script>
+    <script src="codemirror-prolog-mode.js"></script>
+    <link rel="stylesheet" href="codemirror.css">
+    <link rel="stylesheet" href="vibrant-ink.css">
+    <script src="prolog_parse.js"></script>
+    <script src="prolog.js"></script>
+    <link rel="stylesheet" media="screen" href="http://openfontlibrary.org/face/cosmic-sans-neue-mono" rel="stylesheet" type="text/css"/>
+    <link href="jquery.terminal.css" rel="stylesheet"/>
+    <script>
+      var editor;
+      function consult() {
+        editor.save();
+        var programText = $("#program")[0].value;
+        program = parser.parse(programText);
+      }
+
+      jQuery(function($, undefined) {
+          editor = CodeMirror.fromTextArea($('#program')[0],
+            { mode: "prolog"
+             ,theme: "vibrant-ink"
+             ,lineNumbers: true
+            });
+          $('#term').terminal(function(queryText, terminal) {
+            if (!window.terminal) {
+              
+            }
+            if (queryText !== '') {
+                try {
+                    var query = parser.parse(queryText,{startRule: "query"});
+                    executeQuery(query,terminal);
+                } catch(e) {
+                  terminal.error(new String(e));
+                }
+            } else {
+              terminal.echo('');
+            }
+          }, {
+      onInit: function(terminal) {window.terminal = terminal;},
+      greetings: 'Javascript Prolog Interpreter. fgc@usal.es',
+      name: 'js_demo',
+      height: 300,
+      prompt: '?- '});
+      });
+    </script>
+    <style>
+       #left
+        {
+          width: 600px;
+          float: left;
+        }
+    
+        #right
+        {
+          margin-left: 500px;
+        }
+    
+        .clear
+        {
+          clear: both;
+        }
+    </style>
+  </head>
+  <body>
+    <div id="left">
+      <textarea id="program" cols="60" rows="20">male(adam).
+male(abel).
+male(cain).
+female(eve).
+parent(adam,abel).
+parent(eve,abel).
+parent(adam,cain).
+parent(eve,cain).
+parent(cain, enoch).
+son(X,Y) :- parent(Y,X).
+ancestor(X,Y) :- parent(X,Y).
+ancestor(X,Y) :- parent(Z,Y),ancestor(X,Z).</textarea>
+      <input type="button" value="Consult" onclick="consult();">
+    </div>
+    <div id="right">
+      <div id="term" class="terminal" style="height: 300px;"></div>
+    <div>
+  </body>
+</html>
